@@ -92,23 +92,30 @@ def predict():
         img = Image.open(file).convert('RGB')
         img_t = transform(img)
         
-        # 2. Add batch dimension (batch_t must be defined BEFORE the model call)
+        # Add batch dimension
         batch_t = torch.unsqueeze(img_t, 0)
+
+        # --- SAFETY TWEAK ---
+        model.eval() # Explicitly tell model NOT to use training memory
+        # --------------------
 
         # 3. Perform the Prediction
         with torch.no_grad():
             output = model(batch_t)
             
             # Apply Softmax to get probabilities
-            probabilities = F.softmax(output, dim=1)
+            probabilities = torch.softmax(output, dim=1) # Using torch.softmax directly is cleaner
             conf, index = torch.max(probabilities, 1)
             
             # Get the predicted mineral key and confidence score
             predicted_key = MINERALS[index.item()]
             confidence_val = round(conf.item() * 100, 2)
 
+        # --- MEMORY CLEANUP ---
+        del img, img_t, batch_t, output # Manually clear the heavy image data from RAM
+        # ----------------------
+
         # 4. Fetch the detailed data from the JSON database
-        # If the key is missing from JSON, we provide a fallback
         info = MINERAL_DATA.get(predicted_key, {
             "title": predicted_key.replace('_', ' ').title(),
             "structure": "Data Unavailable",
