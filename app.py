@@ -82,13 +82,29 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # ... (your existing checks)
+    """Handles image upload and model prediction."""
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        return render_template('index.html', error="No file part in the request.")
+    
+    # We define 'uploaded_file' here so it doesn't conflict with Python's 'file' keyword
+    uploaded_file = request.files['file']
+    
+    if uploaded_file.filename == '':
+        return render_template('index.html', error="No image selected for uploading.")
+
+    if not model:
+        return render_template('index.html', error="Model not loaded. Please restart the server.")
+
     try:
-        img = Image.open(file).convert('RGB')
+        # 1. Open and transform the image
+        # We use 'uploaded_file' instead of 'file' to be safe
+        img = Image.open(uploaded_file).convert('RGB')
         img_t = transform(img)
         batch_t = torch.unsqueeze(img_t, 0)
 
-        model.eval() 
+        # 2. Perform the Prediction
+        model.eval()
         with torch.no_grad():
             output = model(batch_t)
             probabilities = torch.softmax(output, dim=1)
@@ -97,11 +113,10 @@ def predict():
             predicted_key = MINERALS[index.item()]
             confidence_val = round(conf.item() * 100, 2)
 
-        # --- THE FIX HERE ---
-        # Clear the prediction output immediately
-        del output, batch_t, img_t
-        # --------------------
+        # 3. Clean up memory immediately
+        del img, img_t, batch_t, output
 
+        # 4. Fetch data from JSON
         info = MINERAL_DATA.get(predicted_key, {
             "title": predicted_key.replace('_', ' ').title(),
             "structure": "Data Unavailable",
@@ -114,8 +129,9 @@ def predict():
         return render_template('index.html', result=info, confidence=confidence_val)
     
     except Exception as e:
+        # This will now tell us the REAL error if it's not the 'file' variable
         print(f"❌ Prediction Error: {e}")
-        return render_template('index.html', error="An error occurred while processing the image.")
+        return render_template('index.html', error=f"An error occurred: {str(e)}")
 
 # --- ROUTE: BROWSE DATABASE ---
 @app.route('/database')
