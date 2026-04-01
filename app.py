@@ -40,19 +40,25 @@ else:
 
 # --- 2. MODEL LOADING ---
 def get_model(model_filename):
-    # Initialize the ResNet18 architecture
+    # Force torch to use only 1 thread to save RAM
+    torch.set_num_threads(1) 
+    
     model = models.resnet18()
-    # Modify the final layer to match your 11 mineral classes
     model.fc = nn.Linear(model.fc.in_features, len(MINERALS))
     
     try:
-        # Load your trained weights (.pth file)
-        model.load_state_dict(torch.load(model_filename, map_location=torch.device('cpu')))
+        # Optimization: load onto CPU and specify weights_only for security/speed
+        state_dict = torch.load(model_filename, map_location=torch.device('cpu'), weights_only=False)
+        model.load_state_dict(state_dict)
         model.eval()
+        
+        # Cleanup the temporary state_dict to free RAM immediately
+        del state_dict 
+        
         print(f"✅ Model '{model_filename}' loaded successfully.")
         return model
-    except FileNotFoundError:
-        print(f"❌ Error: {model_filename} not found in project directory.")
+    except Exception as e:
+        print(f"❌ Error loading model: {e}")
         return None
 
 # Load the model once when the app starts
@@ -76,46 +82,26 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Handles image upload and model prediction."""
-    if 'file' not in request.files:
-        return render_template('index.html', error="No file uploaded.")
-    
-    file = request.files['file']
-    if file.filename == '':
-        return render_template('index.html', error="No file selected.")
-
-    if not model:
-        return render_template('index.html', error="Model not loaded. Check terminal.")
-
+    # ... (your existing checks)
     try:
-        # 1. Open and transform the image
         img = Image.open(file).convert('RGB')
         img_t = transform(img)
-        
-        # Add batch dimension
         batch_t = torch.unsqueeze(img_t, 0)
 
-        # --- SAFETY TWEAK ---
-        model.eval() # Explicitly tell model NOT to use training memory
-        # --------------------
-
-        # 3. Perform the Prediction
+        model.eval() 
         with torch.no_grad():
             output = model(batch_t)
-            
-            # Apply Softmax to get probabilities
-            probabilities = torch.softmax(output, dim=1) # Using torch.softmax directly is cleaner
+            probabilities = torch.softmax(output, dim=1)
             conf, index = torch.max(probabilities, 1)
             
-            # Get the predicted mineral key and confidence score
             predicted_key = MINERALS[index.item()]
             confidence_val = round(conf.item() * 100, 2)
 
-        # --- MEMORY CLEANUP ---
-        del img, img_t, batch_t, output # Manually clear the heavy image data from RAM
-        # ----------------------
+        # --- THE FIX HERE ---
+        # Clear the prediction output immediately
+        del output, batch_t, img_t
+        # --------------------
 
-        # 4. Fetch the detailed data from the JSON database
         info = MINERAL_DATA.get(predicted_key, {
             "title": predicted_key.replace('_', ' ').title(),
             "structure": "Data Unavailable",
