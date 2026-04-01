@@ -1,0 +1,90 @@
+{
+    "aba_panu_aba_panu": {
+        "title": "Aba Panu",
+        "structure": "Chondritic (Meteorite)",
+        "hardness": "4.0 - 5.0",
+        "gravity": "3.20 - 3.30",
+        "refractive_index": "N/A (Opaque)",
+        "molar_mass": "Complex Mixture"
+    },
+    "abukumalit": {
+        "title": "Abukumalit",
+        "structure": "Hexagonal",
+        "hardness": "5.0",
+        "gravity": "4.30 - 4.60",
+        "refractive_index": "1.75 - 1.81",
+        "molar_mass": "1,022.6 g/mol"
+    },
+    "actinolite-asbestos": {
+        "title": "Actinolite-Asbestos",
+        "structure": "Monoclinic",
+        "hardness": "5.0 - 6.0",
+        "gravity": "3.00 - 3.44",
+        "refractive_index": "1.61 - 1.66",
+        "molar_mass": "864.8 g/mol"
+    },
+    "adamin": {
+        "title": "Adamin",
+        "structure": "Orthorhombic",
+        "hardness": "3.5",
+        "gravity": "4.30 - 4.50",
+        "refractive_index": "1.71 - 1.77",
+        "molar_mass": "286.7 g/mol"
+    },
+    "aegirine_augite": {
+        "title": "Aegirine-Augite",
+        "structure": "Monoclinic",
+        "hardness": "6.0",
+        "gravity": "3.40 - 3.55",
+        "refractive_index": "1.70 - 1.75",
+        "molar_mass": "233.1 g/mol"
+    },
+    "afghanite": {
+        "title": "Afghanite",
+        "structure": "Hexagonal",
+        "hardness": "5.5 - 6.0",
+        "gravity": "2.55 - 2.56",
+        "refractive_index": "1.52 - 1.53",
+        "molar_mass": "1,215.3 g/mol"
+    },
+    "aftitalit": {
+        "title": "Aftitalit",
+        "structure": "Trigonal",
+        "hardness": "2.0 - 3.0",
+        "gravity": "2.66 - 2.70",
+        "refractive_index": "1.48 - 1.49",
+        "molar_mass": "332.4 g/mol"
+    },
+    "afwillite": {
+        "title": "Afwillite",
+        "structure": "Monoclinic",
+        "hardness": "3.0 - 4.0",
+        "gravity": "2.62 - 2.63",
+        "refractive_index": "1.61 - 1.63",
+        "molar_mass": "182.2 g/mol"
+    },
+    "agalmatolite": {
+        "title": "Agalmatolite",
+        "structure": "Monoclinic/Triclinic",
+        "hardness": "1.0 - 2.0",
+        "gravity": "2.70 - 2.90",
+        "refractive_index": "1.55 - 1.60",
+        "molar_mass": "258.2 g/mol"
+    },
+    "agardite-ce": {
+        "title": "Agardite-Ce",
+        "structure": "Hexagonal",
+        "hardness": "3.0 - 4.0",
+        "gravity": "3.66 - 3.75",
+        "refractive_index": "1.70 - 1.78",
+        "molar_mass": "1,126.9 g/mol"
+    },
+    "smoky_quartz": {
+        "title": "Smoky Quartz",
+        "structure": "Trigonal",
+        "hardness": "7.0",
+        "gravity": "2.65",
+        "refractive_index": "1.54 - 1.55",
+        "molar_mass": "60.1 g/mol"
+    }
+}

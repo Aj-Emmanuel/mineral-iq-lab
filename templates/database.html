@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MineralIQ | Encyclopedia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8f9fa; padding: 40px; color: #2d2a26; }
+        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .back-link { text-decoration: none; color: #c4a15a; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #1e1b15; color: white; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        tr:hover { background: #fffcf5; }
+        
+        .badge { background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .btn-csv { color: #c4a15a; text-decoration: none; border: 1px solid #c4a15a; padding: 5px 12px; border-radius: 6px; font-size: 13px; transition: 0.2s; }
+        .btn-csv:hover { background: #c4a15a; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="header-area">
+        <div>
+            <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+            <h1 style="margin-top: 10px;">Mineral Encyclopedia</h1>
+        </div>
+        <p style="color: #888;">Total Specimens: {{ minerals|length }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mineral Name</th>
+                <th>Hardness</th>
+                <th>Structure</th>
+                <th>Molar Mass</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, val in minerals.items() %}
+            <tr>
+                <td><strong>{{ val.title }}</strong></td>
+                <td><span class="badge">{{ val.hardness }}</span></td>
+                <td>{{ val.structure }}</td>
+                <td>{{ val.molar_mass }}</td>
+                <td>
+                    <a href="/export/{{ key }}" class="btn-csv">
+                        <i class="fa-solid fa-download"></i> Export CSV
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
